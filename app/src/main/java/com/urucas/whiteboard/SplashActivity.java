@@ -7,9 +7,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -17,7 +19,9 @@ public class SplashActivity extends ActionBarActivity implements SensorEventList
 
     private long lastUpdate;
     private SensorManager sensorManager;
-    private View view;
+    private float[] pos, center;
+    private Button centerButton;
+    private int step = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,27 +31,16 @@ public class SplashActivity extends ActionBarActivity implements SensorEventList
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         lastUpdate = System.currentTimeMillis();
 
-        view = findViewById(R.id.textView);
-        view.setBackgroundColor(Color.GREEN);
-    }
+        Log.i("esta logueando", "see");
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.splash, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        centerButton = (Button)findViewById(R.id.centerButton);
+        centerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                center = pos;
+            }
+        });
+        centerButton.setVisibility(View.GONE);
     }
 
     @Override
@@ -58,30 +51,13 @@ public class SplashActivity extends ActionBarActivity implements SensorEventList
     }
 
     private void getAccelerometer(SensorEvent event) {
-        float[] values = event.values;
+        pos = event.values;
         // Movement
-        float x = values[0];
-        float y = values[1];
-        float z = values[2];
+        float x = pos[0];
+        float y = pos[1];
+        float z = pos[2];
 
-        float accelationSquareRoot = (x * x + y * y + z * z)
-                / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
-        long actualTime = event.timestamp;
-        if (accelationSquareRoot >= 2) //
-        {
-            if (actualTime - lastUpdate < 200) {
-                return;
-            }
-            lastUpdate = actualTime;
-            Toast.makeText(this, "Device was shuffed", Toast.LENGTH_SHORT)
-                    .show();
-            if (color) {
-                view.setBackgroundColor(Color.GREEN);
-            } else {
-                view.setBackgroundColor(Color.RED);
-            }
-            color = !color;
-        }
+        Log.i("xyz", String.valueOf(x) + "," + String.valueOf(y) + "," + String.valueOf(z));
     }
 
     @Override

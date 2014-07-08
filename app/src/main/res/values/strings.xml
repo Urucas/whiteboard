@@ -4,5 +4,8 @@
     <string name="app_name">whiteboard</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="center">Center my canvas here!</string>
+    <string name="howto1">Start moving your phone to activate the accelerometer</string>
+    <string name="howto2">Start moving your phone to activate the accelerometer</string>
 
 </resources>
